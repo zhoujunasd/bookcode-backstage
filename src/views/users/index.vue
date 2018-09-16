@@ -1,0 +1,120 @@
+<template>
+    <div class="user-manage">
+        <div class="breadcrumb">
+            <el-breadcrumb class="breadcrumb" separator="/">
+                <el-breadcrumb-item :to="{ path: '/layout/index' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>管理员列表</el-breadcrumb-item>
+                <el-button @click="$router.push('/layout/adduser')" size='mini' type="primary" circle icon="el-icon-plus"></el-button>
+                <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item> -->
+            </el-breadcrumb>
+        </div>
+        <el-table :data="tableData">
+            <el-table-column prop="nickname" label="用户名" width="160">
+            </el-table-column>
+            <el-table-column prop="createdTime" label="创建日期" width="160">
+            </el-table-column>
+            <el-table-column prop="desc" label="个性签名" width="240">
+            </el-table-column>
+            <el-table-column prop="email" label="电子邮箱" width="180">
+            </el-table-column>
+            <el-table-column label="用户头像" width="100">
+                <template slot-scope="scope">
+                    <img :src="scope.row.avatar" alt="" :onerror="errorImg" class="avatar">
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button @click="handleDetails" size="small" type='primary' >编辑</el-button>
+                    <el-button @click="handleDel(scope.row._id)" size="small" type="danger">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      tableData: [],
+      errorImg:'this.src="'+require('../../../static/images/404.jpg')+'"'
+    };
+  },
+//   beforeMount(){
+//       console.log(this.$el);
+//   },        
+//   mounted(){
+//       console.log(this.$el);
+//   },
+  methods: {
+    getData() {
+      this.$axios.get("/user").then(res => {
+        if (res.code == 200) {
+        //   console.log(res.data);
+          res.data.forEach(item=>{
+            //   console.log(item)
+              let Y = item.createdTime.slice(0,4)
+              let M = item.createdTime.slice(5,7)
+            //   if(M<10){console.log(M)console.log(M.substr(1,1))}
+              let D = item.createdTime.slice(8,10)
+              item.createdTime = `${Y}年${M}月${D}日`
+              return item
+          })
+          this.tableData = res.data;
+        }
+      });
+    },
+    handleDetails(){
+        this.$axios.push('')
+    },
+    handleDel(userID){
+        this.$confirm('此操作将永久删除该管理员, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$axios.post('/user/delete',{userIds: [userID]}).then(res => {
+                console.log(res)
+                if(res.code == 200){
+                    this.$message.success({
+                        message:res.msg,
+                        duration:1500,
+                        center:true
+                    })
+                    this.getData()
+                }else{
+                    this.$message.error({
+                        message:res.msg,
+                        duration:1500,
+                        center:true
+                    })
+                }
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+    },
+  },
+  created() {
+    this.getData();
+  }
+};
+</script>
+
+<style scoped lang='scss'>
+.user-manage {
+  .breadcrumb{
+      margin-bottom: 10px;
+      line-height: 30px;
+      height: 30px;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+}
+</style>
+

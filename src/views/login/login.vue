@@ -34,7 +34,15 @@ export default {
           this.$axios.post('/login',this.formData).then(res => {
               console.log(res)
               if(res.code == 200 ){
-                  this.$message.success('登录成功')
+                  this.$message({
+                      showClose:true,
+                      type:'success',
+                      message:'登陆成功',
+                      duration:1500
+                  })
+                 setTimeout(() => {
+                      this.$router.push('/layout/index')
+                 }, 1000);
               }else{
                   this.$message.error(res.msg)
               }

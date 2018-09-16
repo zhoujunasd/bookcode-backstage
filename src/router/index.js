@@ -4,15 +4,47 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const components = {
-  login:()=> import('@/views/login/login')
+  login:()=> import('@/views/login/login'),
+  layout:() => import('@/views/layout/layout'),
+  index:()=>import('@/views/index/index'),
+  users:()=>import('@/views/users/index'),
+  adduser:() => import('@/views/users/adduser'),
 }
 
 export default new Router({
   routes: [
     {
       path: '/',
+      redirect:'/login'
+    },
+    {
+      path:'/login',
       name: 'login',
       component:components.login
+    },
+    {
+      path:'/layout',
+      name:'layout',
+      component:components.layout,
+      redirect:'/layout/index',
+      meta:{
+        title:'首页'
+      },
+      children:[
+        {
+          path:'index',
+          component:components.index,
+        },{
+          path:'users',
+          component:components.users,
+          meta:{
+            title:'管理员'
+          },
+        },{
+          path:'adduser',
+          component:components.adduser
+        }
+      ]
     }
   ]
 })
