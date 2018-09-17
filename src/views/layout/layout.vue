@@ -5,6 +5,7 @@
         </div>
         <div class="side-bar">
             <el-menu 
+                class="el-menu-vertical-demo"
                 :router="true" 
                 @open="handleOpen" 
                 @close="handleClose" 
@@ -37,9 +38,9 @@
                         <span slot="title">管理员用户</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="/layout/users">管理员列表</el-menu-item>
+                        <el-menu-item index="/layout/users" >管理员列表</el-menu-item>
                         <el-menu-item index="/">修改密码</el-menu-item>
-                        <el-menu-item index="/">修改个人信息</el-menu-item>
+                        <el-menu-item index="/layout/edituser" >修改个人信息</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="4">
@@ -79,7 +80,14 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
-    }
+    },
+    // selectmenu(index,indexPath){
+    //     console.log(index)
+    //     console.log(indexPath)
+    // }
+  },
+  created(){
+    //   this.selectmenu()
   }
 };
 </script>
@@ -110,9 +118,15 @@ export default {
     border-right: 1px solid #888;
     background-color: #545c64;
   }
-  .el-menu-vertical-demo {
-    border: none;
-  }
+//   .el-menu-vertical-demo {
+//     border: none;
+//   }
+    /deep/{
+        .el-menu-vertical-demo{
+            border: none;
+        }
+    }
+
   .main-content{
       padding: 15px;
   }

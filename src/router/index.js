@@ -9,6 +9,7 @@ const components = {
   index:()=>import('@/views/index/index'),
   users:()=>import('@/views/users/index'),
   adduser:() => import('@/views/users/adduser'),
+  edituser:() => import('@/views/users/edituser'),
 }
 
 export default new Router({
@@ -41,9 +42,14 @@ export default new Router({
             title:'管理员'
           },
         },{
-          path:'adduser',
+          path:'adduser',meta:{
+            title:'添加管理员'
+          },
           component:components.adduser
-        }
+        },{
+          path:'edituser',
+          component:components.edituser,
+        },
       ]
     }
   ]

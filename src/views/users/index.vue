@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <el-table :data="tableData">
-            <el-table-column prop="nickname" label="用户名" width="160">
+            <el-table-column prop="nickname" label="昵称：" width="160">
             </el-table-column>
             <el-table-column prop="createdTime" label="创建日期" width="160">
             </el-table-column>
@@ -29,6 +29,14 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-size = "5"
+            :total = "count"
+            next-click prev-click
+            @current-change="currentchange">
+        </el-pagination>
     </div>
 </template>
 
@@ -36,19 +44,21 @@
 export default {
   data() {
     return {
+      count:0,
+      page:1,
       tableData: [],
       errorImg:'this.src="'+require('../../../static/images/404.jpg')+'"'
     };
   },
-//   beforeMount(){
-//       console.log(this.$el);
-//   },        
-//   mounted(){
-//       console.log(this.$el);
-//   },
   methods: {
+      currentchange(page){
+          this.page = page
+          this.getData()
+      },
     getData() {
-      this.$axios.get("/user").then(res => {
+      this.$axios.get("/user",{pn: this.page,size: 5}).then(res => {
+        //   console.log(res)
+          this.count = res.count
         if (res.code == 200) {
         //   console.log(res.data);
           res.data.forEach(item=>{
@@ -74,7 +84,7 @@ export default {
           type: 'warning'
         }).then(() => {
             this.$axios.post('/user/delete',{userIds: [userID]}).then(res => {
-                console.log(res)
+                // console.log(res)
                 if(res.code == 200){
                     this.$message.success({
                         message:res.msg,
