@@ -2,6 +2,15 @@
     <div class="layout">
         <div class="header ml200">
             <h1 class="title">code-book后台管理系统</h1>
+            <el-dropdown size="medium" >
+                <el-button type="primary">
+                    <img class="img" :src='imgUrl'>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="editclick">修改个人信息</el-dropdown-item>
+                    <el-dropdown-item @click.native="quit">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
         <div class="side-bar">
             <el-menu 
@@ -19,7 +28,7 @@
                         <span>用户管理</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="/">用户列表</el-menu-item>
+                        <el-menu-item index="/login">用户列表</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="2">
@@ -28,8 +37,8 @@
                         <span slot="title">分类管理</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="/">分类列表</el-menu-item>
-                        <el-menu-item index="/">添加分类</el-menu-item>
+                        <el-menu-item index="/layout/management">分类列表</el-menu-item>
+                        <el-menu-item index="/layout/addclassify">添加分类</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="3">
@@ -39,7 +48,7 @@
                     </template>
                     <el-menu-item-group>
                         <el-menu-item index="/layout/users" >管理员列表</el-menu-item>
-                        <el-menu-item index="/">修改密码</el-menu-item>
+                        <el-menu-item index="/layout/editpassword">修改密码</el-menu-item>
                         <el-menu-item index="/layout/edituser" >修改个人信息</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
@@ -49,7 +58,7 @@
                         <span slot="title">图书管理</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="/">图书列表</el-menu-item>
+                        <el-menu-item index="/layout/book">图书列表</el-menu-item>
                         <el-menu-item index="/">添加图书</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
@@ -74,7 +83,32 @@
 <script>
 export default {
   name: "layout",
+  data(){
+      return{
+          imgUrl:""
+      }
+  },
   methods: {
+      quit(){
+          this.$axios.get('/logout').then(res => {
+            //   console.log(res)
+            if(res.code == 200){
+                this.$message.success({
+                    message:res.msg,
+                    duration: 1500,
+                    center:true
+                })
+                this.$router.push('/login')
+            }
+          })
+      },
+      editclick(){
+          console.log('adsas')
+          this.$router.push("/layout/edituser");
+      },
+      getImg(){
+          this.imgUrl = this.$store.state.userinfo.avatar
+      },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -88,23 +122,49 @@ export default {
   },
   created(){
     //   this.selectmenu()
+    this.getImg()
   }
 };
 </script>
-
 <style scoped lang='scss'>
+    .img{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 1px solid #409EFF;
+    }   
+  .el-dropdown {
+    vertical-align: top;
+    position: absolute;
+    right: 20px;
+    top:10px;
+    // /deep/{
+    //     border: none
+    // }
+  }
+  .el-dropdown > button {
+      width: 60px;
+      height: 60px;
+      border: none;
+      margin: 0;
+      padding: 0;
+      border-radius: 50%
+  }
+
 .layout {
   .ml200 {
     margin-left: 200px;
   }
   .header {
     background-color: #545c64;
+    // display: flex
+    position:relative;
   }
   .title {
     text-align: center;
     font-weight: 600;
-    line-height: 60px;
-    height: 60px;
+    line-height: 80px;
+    height: 80px;
     color: #ccc;
     border-bottom: 1px solid #f1f1f1;
   }

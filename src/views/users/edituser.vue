@@ -29,7 +29,8 @@
                     <el-input type="textarea" v-model="formData.desc"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleformData')">提交修改</el-button>
+                    <el-button type="warning" @click="submitForm('ruleformData')">提交修改</el-button>
+                    <el-button type="primary" @click="back_to">返回</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -64,6 +65,9 @@ export default {
     };
   },
   methods: {
+      back_to(){
+          this.$router.push('/layout/users')
+      },
       initData(){
           this.formData = {...this.$store.state.userinfo}
       },
@@ -126,7 +130,8 @@ export default {
 
 <style scoped lang="scss">
 .formData{
-    width: 500px
+    width: 500px;
+    margin-top: 15px
 }
 </style>
 <style>

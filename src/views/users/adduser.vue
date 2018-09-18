@@ -56,6 +56,9 @@ export default {
           }else if (reg.test(value) == false){
              callback (new Error('密码不能含有非法字符，长度在4-10之间'))
           }else{
+               if (this.ruleForm.chackpassword !== '') {
+                    this.$refs.ruleForm.validateField('chackpassword');
+                }
               callback();
           }
       };

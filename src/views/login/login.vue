@@ -41,14 +41,12 @@ export default {
       this.isLoading = true;
       this.$refs[form].validate(valid => {
         if (valid) {
-          this.$axios
-            .post("/login", this.formData)
-            .then(res => {
+          this.$axios.post("/login", this.formData).then(res => {
               //   console.log(res)
               if (res.code == 200) {
                 this.$store.commit('CHANGE_USERINFO',res.data)
+                this.$store.commit('STORE_PASSWORD',this.formData.password)
                 this.$message.success({
-                  showClose: true,
                   message: "登陆成功",
                   duration: 1500
                 });

@@ -9,20 +9,20 @@
             </el-breadcrumb>
         </div>
         <el-table :data="tableData">
-            <el-table-column prop="nickname" label="昵称：" width="160">
+            <el-table-column prop="nickname" label="昵称：" width="160" align='center'>
             </el-table-column>
-            <el-table-column prop="createdTime" label="创建日期" width="160">
+            <el-table-column prop="createdTime" label="创建日期" width="160" align='center'>
             </el-table-column>
-            <el-table-column prop="desc" label="个性签名" width="240">
+            <el-table-column prop="desc" label="个性签名" width="240" align='center' show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="email" label="电子邮箱" width="180">
+            <el-table-column prop="email" label="电子邮箱" width="180" align='center'>
             </el-table-column>
-            <el-table-column label="用户头像" width="100">
-                <template slot-scope="scope">
+            <el-table-column label="用户头像" width="100" align='center'>
+                <template slot-scope="scope" align='center'>
                     <img :src="scope.row.avatar" alt="" :onerror="errorImg" class="avatar">
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" align='center'>
                 <template slot-scope="scope">
                     <el-button @click="handleDetails" size="small" type='primary' >编辑</el-button>
                     <el-button @click="handleDel(scope.row._id)" size="small" type="danger">删除</el-button>
@@ -30,6 +30,7 @@
             </el-table-column>
         </el-table>
         <el-pagination
+            class="bottom"
             background
             layout="prev, pager, next"
             :page-size = "5"
@@ -75,7 +76,8 @@ export default {
       });
     },
     handleDetails(){
-        this.$axios.push('')
+        console.log('没有接口')
+        // this.$axios.push('')
     },
     handleDel(userID){
         this.$confirm('此操作将永久删除该管理员, 是否继续?', '警告', {
@@ -117,14 +119,18 @@ export default {
 <style scoped lang='scss'>
 .user-manage {
   .breadcrumb{
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       line-height: 30px;
       height: 30px;
   }
   .avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
   }
+    .bottom{
+        float: right;
+        margin-top: 5px;
+    }
 }
 </style>
 

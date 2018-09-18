@@ -10,6 +10,12 @@ const components = {
   users:()=>import('@/views/users/index'),
   adduser:() => import('@/views/users/adduser'),
   edituser:() => import('@/views/users/edituser'),
+  editpassword:() => import('@/views/users/editpassword'),
+  management:() => import('@/views/classify/management'),
+  editclassify:() => import('@/views/classify/editclassify'),
+  addclassify:() => import('@/views/classify/addclassify'),
+  classify_book:() => import('@/views/classify/classify_book'),
+  books:() => import('@/views/books/books'),
 }
 
 export default new Router({
@@ -49,7 +55,30 @@ export default new Router({
         },{
           path:'edituser',
           component:components.edituser,
-        },
+        },{
+          path:'editpassword',
+          component:components.editpassword
+        },{
+          path:'management',
+          component:components.management
+        },{
+          // path:'editclassify/:id',
+          path:'editclassify',
+          name:'editclassify',
+          component:components.editclassify
+        },{
+          path:'addclassify',
+          name:'addclassify',
+          component:components.addclassify
+        },{
+          // path:'editclassify/:id',
+          path:'classify_book',
+          name:'classify_book',
+          component:components.classify_book
+        },{
+          path:'book',
+          component:components.books
+        }
       ]
     }
   ]
