@@ -43,8 +43,8 @@
                 </el-table-column>
                 <el-table-column label="操作" align='center'>
                     <template slot-scope="scope">
-                        <el-button size="small" type='primary' >生成轮播图</el-button>
-                        <el-button size="small" >详情</el-button>
+                        <el-button size="small" type='primary' @click="handleclick">生成轮播图</el-button>
+                        <el-button size="small" @click="detail_book(scope.row._id)">详情</el-button>
                         <el-button size="small" type="danger" @click="del_book(scope.row._id)" disabled>删除</el-button>
                     </template>
                 </el-table-column>
@@ -77,6 +77,11 @@
             }
         },
         methods:{
+            detail_book(id){
+                this.$router.push({
+                    path: `/layout/bookdetails/${id}`,
+                })
+            },
             del_book(bookId){
                 // console.log(bookId)
                 this.$axios.del(`/book/${bookId}`).then(res => {
@@ -143,7 +148,6 @@
         width: 80px;
         height: 80px;
     }
-
 }
 .avatar{
     width: 60px;

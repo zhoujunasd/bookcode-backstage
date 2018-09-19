@@ -59,7 +59,7 @@
                     </template>
                     <el-menu-item-group>
                         <el-menu-item index="/layout/book">图书列表</el-menu-item>
-                        <el-menu-item index="/">添加图书</el-menu-item>
+                        <el-menu-item index="/layout/addbook">添加图书</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="5">
@@ -68,7 +68,8 @@
                         <span slot="title">轮播图管理</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="/">轮播图列表</el-menu-item>
+                        <el-menu-item index="/layout/slideshow">轮播图列表</el-menu-item>
+                        <el-menu-item index="/layout/addslideshow">添加轮播图</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
