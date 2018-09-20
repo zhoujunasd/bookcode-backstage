@@ -13,9 +13,9 @@
                 :data="data"
                 align='center'
                 tooltip-effect="light">
-                <el-table-column label="书籍封面" width="160" align='center'  header-align='center'>
+                <el-table-column label="书籍封面" width="120" align='center'  header-align='center'>
                     <template slot-scope="scope" header-align='center' align='center'>
-                        <img :src="scope.row.img" :onerror="errorImg" class="avatar">
+                        <img :src="scope.row.img" :onerror="errorImg" class="avatar-img">
                     </template>
                 </el-table-column>
                 <el-table-column prop="title" label="书名" width="240" align='center' empty-text show-overflow-tooltip>
@@ -30,8 +30,11 @@
                 </el-table-column>
                 <el-table-column label="操作" align='center' width="240">
                     <template slot-scope="scope">
-                        <el-button size="small" @click="bookdetails(scope.row._id)">详情</el-button>
-                        <el-button size="small" type="danger" @click="del_book(scope.row._id,scope.row.type._id)" disabled>删除</el-button>
+                        <div v-if="!isAdd">
+                            <el-button size="small" @click="bookdetails(scope.row._id)">详情</el-button>
+                            <el-button size="small" type="danger" @click="del_book(scope.row._id,scope.row.type._id)" disabled>删除</el-button>
+                        </div>
+                            <el-button v-else size="small" type="primary" @click="addtypeBook(scope.row._id)">添加</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -39,7 +42,7 @@
         <el-pagination
             class = "bottom"
             background
-            small
+            
             :page-size = "5"
             layout="prev, pager, next"
             next-click prev-click
@@ -58,9 +61,20 @@
                 count:0,
                 getcount:1,
                 page:1,
+                isAdd:false,
             }
         },
         methods:{
+            addtypeBook(bookid){
+                this.$axios.post(`category/${this.$route.query.id}/book/${bookid}`).then(res => {
+                    // console.log(res)
+                    if(res.code == 200){
+                        this.$message.success(res.msg)
+                    }else{
+                        this.$message.error(res.msg)
+                    }
+                })
+            },
             bookdetails(bookId){
                 // this.$router.push({
                 //     name:'bookdetails',
@@ -73,21 +87,33 @@
                     })
             },
             del_book(bookId,typeId){
-                this.$axios.del(`/book/${bookId}`).then(res => {
-                    if(res.code == 200){
-                        this.$message.success({
-                            messsage:res.msg,
-                            center:true
-                        })
-                        this.getData()
-                    }else{
-                        this.$message.error({
-                            messsage:res.msg,
-                            center:true
-                        })
-                    }
-                }),
-                this.$axios.del(`/category/${typeId}/book/${bookId}`).then(res => { })
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$axios.del(`/book/${bookId}`).then(res => {
+                        // console.log(res)
+                        if(res.code == 200){
+                            this.$message.success({
+                                message: res.msg,
+                                center:true
+                            })
+                            this.getData()
+                        }else{
+                            this.$message.error({
+                                message:res.msg,
+                                center:true
+                            })
+                        }
+                    }),
+                    this.$axios.del(`/category/${typeId}/book/${bookId}`).then(res => { })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
             },
             currentchange(page){
                 this.page = page;
@@ -124,15 +150,28 @@
                 })
             },
         },
+        watch:{
+            $route(){
+                if(this.$route.name != 'addtypebook'){
+                    this.isAdd = false
+                }
+            }
+        },
         created(){
             this.getData()
             this.getCount()
+            if(this.$route.name == 'addtypebook'){
+                this.isAdd = true
+                // console.log(this.$route.query.id)
+            }else{
+                this.isAdd = false
+            }
         }
     }
 </script>
 
 <style scoped lang="scss">
-.avatar{
+.avatar-img{
     width: 50px;
     height: 50px;
 }

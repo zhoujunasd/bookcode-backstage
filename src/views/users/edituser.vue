@@ -82,11 +82,11 @@ export default {
              this.$axios.put('/user/userInfo',this.formData).then(res => {
                 if(res.code == 200 ){
                     this.$store.commit('CHANGE_USERINFO',res.data)
-                  this.$message.success({
-                      showClose:false,
-                      message:'个人信息修改成功',
-                      duration:1500
-                  })
+                    this.$message.success({
+                        showClose:false,
+                        message:'个人信息修改成功',
+                        duration:1500
+                    })
                 //   this.initData()
                  setTimeout(() => {
                       this.$router.push('/layout/users')
@@ -121,6 +121,7 @@ export default {
         return isJPG && isLt1M;
     }
   },
+  
   created(){
       this.getToken(),
       this.initData()

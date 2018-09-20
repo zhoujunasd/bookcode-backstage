@@ -12,7 +12,7 @@
             <el-table slot="empty" :data="formdata">
                 <el-table-column label="分类图标" width="120" align='center'>
                     <template slot-scope="scope" align='center'>
-                        <img :src="scope.row.icon" :onerror="errorImg" class="avatar">
+                        <img :src="scope.row.icon" :onerror="errorImg" class="avatar-img">
                     </template>
                 </el-table-column>
                 <el-table-column prop="title" label="分类名" width="180" align='center' show-overflow-tooltip>
@@ -23,11 +23,11 @@
                 </el-table-column>
                 <el-table-column prop="books.length" label="书籍数" width="100" align='center'>
                 </el-table-column>
-                <el-table-column label="操作" align='center' width="360">
+                <el-table-column label="操作" align='center' width="320">
                     <template slot-scope="scope">
                         <el-button size="small" type='primary' @click="ediit_classify(scope.row._id)">编辑</el-button>
                         <el-button size="small" @click="details(scope.row._id,scope.row.books.length)">详情</el-button>
-                        <el-button size="small" type="danger" @click="del_classify(scope.row._id)">删除</el-button>
+                        <el-button size="small" type="danger" @click="del_classify(scope.row._id)" disabled>删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -151,7 +151,7 @@ export default {
 
 <style scoped lang='scss'>
 .classify {
-  .avatar {
+  .avatar-img {
     width: 50px;
     height: 50px;
   }

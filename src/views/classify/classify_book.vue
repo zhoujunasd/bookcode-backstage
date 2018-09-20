@@ -1,12 +1,14 @@
 <template>
     <div>
         <div class="header">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/layout/index' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>分类管理</el-breadcrumb-item>
                 <el-breadcrumb-item :to="{ path: '/layout/management' }">分类列表</el-breadcrumb-item>
                 <el-breadcrumb-item>分类图书详情列表</el-breadcrumb-item>
+                <el-button @click="addtypeBook" size='mini' type="primary" circle icon="el-icon-plus"></el-button>
             </el-breadcrumb>
+
         </div>
         <div class="content">
             <el-form :inline="true" :model="data" class="demo-form-inline">
@@ -30,7 +32,7 @@
                 :data="books">
                 <el-table-column label="书籍封面" width="120" align='center'>
                     <template slot-scope="scope" header-align='center' align='center'>
-                        <img :src="scope.row.img" :onerror="errorImg" class="avatar">
+                        <img :src="scope.row.img" :onerror="errorImg" class="avatar-img">
                     </template>
                 </el-table-column>
                 <el-table-column prop="title" label="书名" width="180" align='center' empty-text show-overflow-tooltip>
@@ -43,7 +45,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align='center'>
                     <template slot-scope="scope">
-                        <el-button size="small" type='primary' @click="handleclick">生成轮播图</el-button>
+                        <el-button size="small" type='primary' @click="handleclick(scope.row._id)">生成轮播图</el-button>
                         <el-button size="small" @click="detail_book(scope.row._id)">详情</el-button>
                         <el-button size="small" type="danger" @click="del_book(scope.row._id)" disabled>删除</el-button>
                     </template>
@@ -64,7 +66,6 @@
 
 <script>
 // /category/:id/book/:bookid
-// 
     export default {
         data(){
             return{
@@ -77,6 +78,14 @@
             }
         },
         methods:{
+            addtypeBook(){
+                let id = this.data._id
+                this.$router.push({name:'addtypebook',query:{id}})
+            },
+            //生成轮播图
+            handleclick(id){
+                this.$router.push({name:'addslideshow',query:{id}})
+            },
             detail_book(id){
                 this.$router.push({
                     path: `/layout/bookdetails/${id}`,
@@ -149,7 +158,7 @@
         height: 80px;
     }
 }
-.avatar{
+.avatar-img{
     width: 60px;
     height: 60px;
 }
@@ -157,4 +166,8 @@
     float: right;
     margin-top: 20px;
 }
+  .breadcrumb {
+    line-height: 29px;
+    height: 29px;
+  }
 </style>

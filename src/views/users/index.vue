@@ -19,13 +19,13 @@
             </el-table-column>
             <el-table-column label="用户头像" width="100" align='center'>
                 <template slot-scope="scope" align='center'>
-                    <img :src="scope.row.avatar" alt="" :onerror="errorImg" class="avatar">
+                    <img :src="scope.row.avatar" alt="" :onerror="errorImg" class="avatar-img">
                 </template>
             </el-table-column>
             <el-table-column label="操作" align='center'>
                 <template slot-scope="scope">
-                    <el-button @click="handleDetails" size="small" type='primary' >编辑</el-button>
-                    <el-button @click="handleDel(scope.row._id)" size="small" type="danger">删除</el-button>
+                    <el-button @click="handleDetails(scope.row._id)" size="small" type='primary' >编辑</el-button>
+                    <el-button @click="handleDel(scope.row._id)" size="small" type="danger" disabled>删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -75,9 +75,18 @@ export default {
         }
       });
     },
-    handleDetails(){
-        console.log('没有接口')
-        // this.$axios.push('')
+    handleDetails(id){
+        this.$axios.get(`/user/${id}`).then(res => {
+            console.log(res)
+        })
+        // this.$axios.put('/user/userInfo',{
+        //     avatar:"http://pbl.yaojunrong.com/FuTBptUJeF0-3n98DZEzQF0l61U4",
+        //     desc:"asd",
+        //     email:"asd",
+        //     nickname:"asd"
+        // }).then(res => {
+        //     console.log(res)
+        // })
     },
     handleDel(userID){
         this.$confirm('此操作将永久删除该管理员, 是否继续?', '警告', {
@@ -123,7 +132,7 @@ export default {
       line-height: 30px;
       height: 30px;
   }
-  .avatar {
+  .avatar-img {
     width: 50px;
     height: 50px;
   }

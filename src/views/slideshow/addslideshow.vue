@@ -1,12 +1,23 @@
 <template>
     <div class="form-500">
-        <h2>添加轮播图</h2>
+        <h2 v-if="this.$route.name == 'addslideshow'">添加轮播图</h2>
+
+        <div class="top" v-else>
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{ path: '/layout/index' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>轮播图管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/layout/slideshow' }">轮播图列表</el-breadcrumb-item>
+            <el-breadcrumb-item>轮播图详情</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
+
+
         <el-form size='small' :model="formData" label-width="100px" label-position="left">
-            <el-form-item label="轮播图标题：" >
-                <el-input v-model="formData.title"></el-input>
+            <el-form-item label="轮播图标题："  >
+                <el-input v-model="formData.title" :disabled='dis_able'></el-input>
             </el-form-item>
-            <el-form-item label="图书分类：">
-                <el-select v-model="formData.category" @change="categoryChange">
+            <el-form-item label="图书分类：" >
+                <el-select v-model="formData.category" @change="categoryChange" :disabled='dis_able'>
                     <el-option v-for="(item, index) in cateGoryData" 
                         :key="index"
                         :label="item.title"
@@ -32,16 +43,21 @@
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload"
                         :limit=1
-                        :data="token">
+                        :data="token"
+                        :disabled='dis_able'>
                     <img v-if="this.formData.img" :src="this.formData.img" class="avatarimg el-upload">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
             </el-form-item>
             <el-form-item label="轮播图权重：">
-                <el-input-number v-model="formData.index" :min="1" :max="999" ></el-input-number>
+                <el-input-number v-model="formData.index" :min="1" :max="999" :disabled='dis_able' ></el-input-number>
             </el-form-item>
             <el-form-item>
-                <el-button @click="handle_Sub" type="primary">添加轮播图</el-button>
+                <el-button @click="handle_Sub" type="primary" v-if="this.$route.name == 'addslideshow'">添加轮播图</el-button>
+                <div v-else>
+                    <el-button type="primary" size="small" @click="editBook" >{{dis_able ? '编辑信息':'取消修改'}}</el-button>
+                    <el-button type="warning" size="small" @click="saveBook" >保存更改</el-button>
+                </div>
             </el-form-item>
         </el-form>
 
@@ -89,9 +105,17 @@
                 bookCount:0,//书籍分页
                 isShowDialog:false,
                 page:1,
+                dis_able:true
             }
         },
         methods:{
+            editBook(){
+                if(!this.dis_able){
+                    this.$router.push('/layout/slideshow')
+                }else{
+                    this.dis_able = !this.dis_able
+                }
+            },
             handle_Sub(){
                 //判断是否所有的数据都已经有了
                 let isCan = true
@@ -123,14 +147,14 @@
                 this.isShowDialog = true
                 this.getBookData()
             },
-            async getBookData(){
-                const data = await this.$axios.get(`/category/${this.formData.category}/books`,{pn:this.page,size:3})
+            async getBookData(){          
+                    const data = await this.$axios.get(`/category/${this.formData.category}/books`,{pn:this.page,size:3})
                     this.bookData = data.data.books
                     this.bookCount = data.count
                     // console.log(this.bookData)
             },
             getCateGory(){
-                this.$axios.get('/category').then(res => {
+                this.$axios.get('/category',{size:1000}).then(res => {
                     if(res.code == 200){
                         this.cateGoryData = res.data
                     }else{
@@ -152,7 +176,61 @@
                 }
                 return isJPG && isLt1M;
             },
-
+            // 编辑轮播图时用
+            getInitData() {
+                this.$axios.get(`/swiper/${this.$route.query.id}`).then(res => {
+                 // console.log(res);
+                if(res.code == 200){
+                    this.formData={
+                        ...this.formData,
+                        ...res.data,
+                        book:res.data.book._id,
+                        category:res.data.book.type
+                    }
+                    this.getBookData()
+                    // console.log(this.data)
+                    // 后端限制，默认是每次给四条数据，权宜之计设置比较大的数，不好=============================================================
+                    this.$axios.get(`/category/${this.formData.category}/books`,{size:1000}).then(res => {
+                        this.bookData = res.data.books
+                        this.bookCount = res.count
+                    })
+                }else{
+                    this.$message.error(res.msg)
+                }
+          });
+        },
+        // // 添加轮播图
+        addSwiper(){
+            this.$axios.get(`book/${this.$route.query.id}`).then(res => {
+                // console.log(res)
+                this.formData={
+                    book:res.data._id,
+                    category:res.data.type,
+                    index:1
+                }
+                this.$axios.get(`/category/${this.formData.category}/books`,{size:1000}).then(res => {
+                    this.bookData = res.data.books
+                    this.bookCount = res.count
+                })
+            })
+            // formData:{
+            //         title:"",//轮播图标题
+            //         img:"",//轮播图图片
+            //         book:"",//书籍ID
+            //         index:"",//权重
+            //         category:"",//分类
+            //     },
+        },
+        saveBook(){
+            this.$axios.put(`/swiper/${this.$route.query.id}`,this.formData).then(res => {
+                if(res.code == 200){
+                    this.$message.success(res.msg)
+                    this.$router.push({name:'slideshow'})
+                }else{
+                    this.$message.errror(res.msg)
+                }
+            })
+        }
         },
         computed:{
             getBookItem(){
@@ -163,13 +241,64 @@
                 }
             }
         },
+        // watch:{
+        //     routerName(val){
+        //         if(val == 'addslideshow'){
+        //             console.log('res')
+        //         }else{
+        //             console.log('req')
+        //         }
+        //     }
+        // },
         created(){
+            // console.log('sdad')
             this.getCateGory()
-        }
+            if(this.$route.name == 'addslideshow'){
+                if(this.$route.query.id == ''){
+                    this.formData = {
+                        title:"", img:"", book:"", index:"",category:"",
+                    }
+                }else{
+                    this.addSwiper()
+                    // console.log(this.$route.query.id)
+                }
+                 this.dis_able = false
+            }else{
+                this.getInitData()
+            }
+        },
+        watch:{
+            $route(){
+                // console.log(this.$route.name)
+            if(this.$route.name == 'addslideshow'){
+                this.formData = {
+                    title:"", img:"", book:"", index:"",category:"",
+                }
+                this.dis_able = false
+            }
+            }
+        },
+        // beforeRouteUpdate (to, from, next) {
+        // // 在当前路由改变，但是该组件被复用时调用
+        // // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+        // // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+        // // 可以访问组件实例 `this`
+        // //  if(this.$route.name == 'addslideshow'){
+        // //         this.formData = {
+        // //             title:"", img:"", book:"", index:"",category:"",
+        // //         }
+        // //     }
+        // console.log(to)
+        // console.log(from)
+        // next()
+        // },
     }
 </script>
 
 <style>
+.top{
+    margin-bottom: 20px;
+}
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

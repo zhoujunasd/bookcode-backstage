@@ -166,7 +166,7 @@
     color: #8c939d;
     width: 80px;
     height: 80px;
-    line-height: 70px;
+    line-height: 80px;
     text-align: center;
   }
   .avatar {

@@ -121,6 +121,21 @@ export default {
     //     console.log(indexPath)
     // }
   },
+//   watch:{//===========================================
+//       imgUrl(){
+//           this.imgUrl = this.$store.state.userinfo.avatar
+//       }
+//   },
+  computed: {
+    img() {
+        return this.$store.state.userinfo.avatar;
+    }
+    },
+    watch: {
+        img(val) {
+            this.imgUrl = val;
+        }
+    },
   created(){
     //   this.selectmenu()
     this.getImg()

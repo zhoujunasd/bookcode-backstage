@@ -5,14 +5,14 @@
             <el-table slot="empty" :data="swiper" align='center'>
                 <el-table-column label="轮播图图片" category align='center' header-align='center'>
                     <template slot-scope="scope">
-                        <img :src="scope.row.img" :onerror="errorImg" class="avatar">
+                        <img :src="scope.row.img" :onerror="errorImg" class="avatar-img">
                     </template>
                 </el-table-column>
                 <el-table-column prop="title" label="轮播图标题" width="180" align='center' show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="书籍图片" width="120" align='center' header-align='center'>
                     <template slot-scope="scope">
-                        <img :src="scope.row.book.img" :onerror="errorImg" class="avatar">
+                        <img :src="scope.row.book.img" :onerror="errorImg" class="avatar-img">
                     </template>
                 </el-table-column>
                 <el-table-column prop="book.title" label="书籍名" width="180" align='center' show-overflow-tooltip>
@@ -113,10 +113,9 @@
 </script>
 
 <style scoped lang='scss'>
-.avatar{
+.avatar-img{
     width: 50px;
     height: 50px;
-    
 }
 .content{
     // .elrow{

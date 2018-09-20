@@ -88,6 +88,7 @@ const router = new Router({
           component:components.classify_book
         },{
           path:'book',
+          name:'book',
           meta:{title:'图书列表'},
           component:components.books
         },{
@@ -106,13 +107,19 @@ const router = new Router({
           component:components.slideshow
         },{
           path:'addslideshow',
+          name:'addslideshow',
           meta:{title:'添加轮播图'},
           component:components.addslideshow
         },{
           path:'det_slideshow',
           name:'det_slideshow',
           meta:{title:'轮播图详情'},
-          component:components.det_slideshow
+          component:components.addslideshow
+        },{
+          path:'addtypebook',
+          name:'addtypebook',
+          meta:{title:'轮播图详情'},
+          component:components.books
         }
       ]
     }
